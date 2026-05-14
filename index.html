@@ -950,7 +950,7 @@
             </div>
         </div>
 
-        <!-- مودال الدعوة (إحالة) - بدون QR وواتساب/تليجرام وكل القيم 0 -->
+        <!-- مودال الدعوة (إحالة) - الرابط الجديد -->
         <div id="invite-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden modal-overlay">
             <div class="w-11/12 max-w-md rounded-2xl p-5 shadow-2xl max-h-[90vh] overflow-y-auto no-scrollbar" style="background: var(--card);">
                 <div class="flex items-center justify-between mb-4 sticky top-0 py-2 z-10" style="background: var(--card);">
@@ -972,11 +972,11 @@
                     </div>
                 </div>
 
-                <!-- رابط الإحالة فقط (بدون QR وبدون أزرار مشاركة) -->
+                <!-- رابط الإحالة الجديد -->
                 <div class="p-4 rounded-xl border mb-4" style="background: var(--input-bg); border-color: var(--border);">
                     <p class="font-bold text-sm mb-2">رابط الإحالة الخاص بك</p>
                     <div class="flex items-center justify-between gap-2 p-2 rounded-lg border mb-3" style="background: var(--card); border-color: var(--border);">
-                        <code class="text-sm font-mono break-all flex-1" id="invite-link">https://exurs7app.github.io/ForX/</code>
+                        <code class="text-sm font-mono break-all flex-1" id="invite-link">https://exurs7app.github.io/ForX508/</code>
                         <button id="copy-invite-link" class="p-2 rounded-lg text-crypto-blue hover:opacity-80 transition flex-shrink-0" style="background: var(--input-bg);"><i class="fas fa-copy"></i></button>
                     </div>
                     <p class="text-xs" style="color: var(--text-secondary);">
@@ -2523,7 +2523,7 @@
                 document.getElementById('close-news-modal').addEventListener('click', function() { newsModal.classList.add(
                         'hidden'); });
 
-                // مودال الدعوة - جميع القيم أصفار، بدون QR أو أزرار مشاركة
+                // مودال الدعوة - الرابط الجديد
                 var inviteModal = document.getElementById('invite-modal');
                 document.getElementById('invite-btn').addEventListener('click', function() {
                     updateInviteModalData();
