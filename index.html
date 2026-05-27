@@ -409,6 +409,106 @@
             margin-bottom: 6px;
             border: 1px solid var(--border);
         }
+
+        .market-row-price {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text);
+            font-variant-numeric: tabular-nums;
+        }
+        .market-row-sub {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            margin-top: 1px;
+        }
+        .market-row-change {
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-variant-numeric: tabular-nums;
+        }
+        .market-row-change.up {
+            color: #02c076;
+            background: rgba(2, 192, 118, 0.12);
+        }
+        .market-row-change.down {
+            color: #f84960;
+            background: rgba(248, 73, 96, 0.12);
+        }
+        .market-row-vol {
+            font-size: 0.62rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+            font-variant-numeric: tabular-nums;
+        }
+        .market-cap-badge {
+            font-size: 0.58rem;
+            padding: 1px 5px;
+            border-radius: 4px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            display: inline-block;
+            margin-top: 2px;
+        }
+        .market-rank {
+            font-size: 0.55rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            background: var(--input-bg);
+            padding: 1px 5px;
+            border-radius: 4px;
+            margin-right: 4px;
+        }
+        .sparkline-wrap {
+            width: 56px;
+            height: 22px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .market-row-extra {
+            font-size: 0.58rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+            display: flex;
+            gap: 6px;
+            justify-content: flex-end;
+            font-variant-numeric: tabular-nums;
+        }
+        .asset-row {
+            transition: background 0.15s ease;
+        }
+        .asset-row:hover {
+            background: var(--input-bg);
+        }
+        .asset-row + .asset-row {
+            border-top: 1px solid var(--border);
+        }
+        .chart-container {
+            background: linear-gradient(180deg, rgba(55,114,255,0.03) 0%, rgba(255,255,255,0) 60%);
+        }
+        .dark .chart-container {
+            background: linear-gradient(180deg, rgba(55,114,255,0.06) 0%, rgba(0,0,0,0) 60%);
+        }
+        .live-dot {
+            display: inline-block;
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #02c076;
+            box-shadow: 0 0 0 0 rgba(2,192,118,0.7);
+            animation: livePulse 1.6s infinite;
+            margin-left: 4px;
+            vertical-align: middle;
+        }
+        @keyframes livePulse {
+            0% { box-shadow: 0 0 0 0 rgba(2,192,118,0.6); }
+            70% { box-shadow: 0 0 0 6px rgba(2,192,118,0); }
+            100% { box-shadow: 0 0 0 0 rgba(2,192,118,0); }
+        }
     </style>
 </head>
 <body class="bg-light-bg text-primary antialiased">
@@ -600,6 +700,10 @@
                             <div class="flex items-center gap-2"><i class="fab fa-ethereum text-purple-500 text-lg"></i><div><div class="font-semibold">ETH/USDT</div><div class="text-xs" style="color: var(--text-secondary);">Ethereum</div></div></div>
                             <div class="text-center font-semibold">$3,421.80</div><div class="text-right text-crypto-green font-semibold">+1.87%</div>
                         </div>
+                        <div class="asset-row grid grid-cols-3 py-3 px-3 items-center">
+                            <div class="flex items-center gap-2"><i class="fas fa-layer-group text-teal-500 text-lg"></i><div><div class="font-semibold">APT/USDT</div><div class="text-xs" style="color: var(--text-secondary);">Aptos</div></div></div>
+                            <div class="text-center font-semibold">$9.50</div><div class="text-right text-crypto-green font-semibold">+3.12%</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -645,8 +749,10 @@
                 <div class="space-y-2">
                     <h3 class="font-bold flex items-center gap-2"><i class="fas fa-fire text-orange-400"></i> الأكثر تداولاً</h3>
                     <div class="glass-card rounded-xl overflow-hidden">
-                        <div class="grid grid-cols-3 text-xs py-3 px-3 border-b" style="color: var(--text-secondary); background: var(--input-bg); border-color: var(--border);">
-                            <div>الزوج</div><div class="text-center">آخر سعر</div><div class="text-right">24س</div>
+                        <div class="grid grid-cols-3 text-xs py-2.5 px-3 border-b" style="color: var(--text-secondary); background: var(--input-bg); border-color: var(--border);">
+                            <div>الزوج / القيمة السوقية</div>
+                            <div class="text-center">السعر / أعلى-أدنى</div>
+                            <div class="text-right">التغير / الحجم</div>
                         </div>
                         <div id="top-markets-list"></div>
                     </div>
@@ -692,6 +798,7 @@
                             <div class="asset-option" data-asset="BTC" style="background:white; border:1px solid var(--border); border-radius:30px; padding:8px 16px; display:flex; align-items:center; gap:8px; white-space:nowrap; cursor:pointer;"><i class="fab fa-bitcoin text-yellow-600"></i> BTC</div>
                             <div class="asset-option" data-asset="ETH" style="background:white; border:1px solid var(--border); border-radius:30px; padding:8px 16px; display:flex; align-items:center; gap:8px; white-space:nowrap; cursor:pointer;"><i class="fab fa-ethereum text-purple-600"></i> ETH</div>
                             <div class="asset-option" data-asset="SOL" style="background:white; border:1px solid var(--border); border-radius:30px; padding:8px 16px; display:flex; align-items:center; gap:8px; white-space:nowrap; cursor:pointer;"><i class="fas fa-sun text-orange-500"></i> SOL</div>
+                            <div class="asset-option" data-asset="APT" style="background:white; border:1px solid var(--border); border-radius:30px; padding:8px 16px; display:flex; align-items:center; gap:8px; white-space:nowrap; cursor:pointer;"><i class="fas fa-layer-group text-teal-500"></i> APT</div>
                         </div>
                     </div>
                     <div class="mb-4">
@@ -700,6 +807,7 @@
                             <button id="transfer-network-trc20" class="network-btn active-network flex-1 py-2 rounded-lg text-sm font-medium transition">TRC20</button>
                             <button id="transfer-network-bep20" class="network-btn flex-1 py-2 rounded-lg text-sm font-medium transition">BEP20</button>
                             <button id="transfer-network-erc20" class="network-btn flex-1 py-2 rounded-lg text-sm font-medium transition">ERC20</button>
+                            <button id="transfer-network-apt" class="network-btn flex-1 py-2 rounded-lg text-sm font-medium transition">APT</button>
                         </div>
                         <p class="warning-text flex items-center gap-1 mt-1" style="color:#f59e0b;font-size:0.75rem;"><i class="fas fa-exclamation-triangle"></i> تأكد من اختيار الشبكة المطابقة لعنوان المستلم.</p>
                     </div>
@@ -1011,6 +1119,7 @@
                             <option value="ETH">ETH/USDT</option>
                             <option value="BNB">BNB/USDT</option>
                             <option value="SOL">SOL/USDT</option>
+                            <option value="APT">APT/USDT</option>
                         </select>
                         <select id="alert-direction" class="profile-input" style="width: 100px; padding: 10px;">
                             <option value="above">فوق</option>
@@ -1366,6 +1475,7 @@
                         btcBalance: 0,
                         ethBalance: 0,
                         solBalance: 0,
+                        aptBalance: 0,
                         transactions: [],
                         priceAlerts: [],
                         trades: [],
@@ -1384,11 +1494,12 @@
                             updated = true;
                         }
                         if ((u.balance || 0) !== 0 || (u.btcBalance || 0) !== 0 || (u.ethBalance || 0) !==
-                            0 || (u.solBalance || 0) !== 0) {
+                            0 || (u.solBalance || 0) !== 0 || (u.aptBalance || 0) !== 0) {
                             u.balance = 0;
                             u.btcBalance = 0;
                             u.ethBalance = 0;
                             u.solBalance = 0;
+                            u.aptBalance = 0;
                             updated = true;
                         }
                         if (!u.referredUsers) { u.referredUsers = [];
@@ -1396,6 +1507,8 @@
                         if (u.referralEarnings === undefined) { u.referralEarnings = 0;
                             updated = true; }
                         if (u.pendingEarnings === undefined) { u.pendingEarnings = 0;
+                            updated = true; }
+                        if (u.aptBalance === undefined) { u.aptBalance = 0;
                             updated = true; }
                     });
                     if (updated) saveUsers(users);
@@ -1452,148 +1565,134 @@
 
             function loadPriceAlerts() {
                 var user = getCurrentUser();
-                userPriceAlerts = (user && user.priceAlerts) ? user.priceAlerts : [];
+                userPriceAlerts = user ? (user.priceAlerts || []) : [];
                 renderPriceAlerts();
+                updateAlertBadge();
+            }
+
+            function savePriceAlerts() {
+                var user = getCurrentUser();
+                if (!user) return;
+                updateUser(user.email, { priceAlerts: userPriceAlerts });
             }
 
             function addPriceAlert(symbol, direction, price) {
-                var user = getCurrentUser();
-                if (!user) return;
-                var alert = {
-                    id: Date.now(),
-                    symbol: symbol,
-                    direction: direction,
-                    targetPrice: parseFloat(price),
-                    createdAt: new Date().toLocaleString('ar-EG'),
-                    triggered: false
-                };
-                userPriceAlerts.push(alert);
-                updateUser(user.email, { priceAlerts: userPriceAlerts });
+                userPriceAlerts.push({ id: Date.now(), symbol: symbol, direction: direction, price: price, triggered: false });
+                savePriceAlerts();
                 renderPriceAlerts();
                 updateAlertBadge();
-                showToast('✅ تم إضافة تنبيه لـ ' + symbol + ' عند ' + (direction === 'above' ? 'تجاوز ' : 'انخفاض إلى ') +
-                    price + ' USDT');
+                showToast('تم إضافة تنبيه لـ ' + symbol + ' عند ' + price);
             }
 
-            function removePriceAlert(id) {
-                var user = getCurrentUser();
-                if (!user) return;
+            function removeAlert(id) {
                 userPriceAlerts = userPriceAlerts.filter(function(a) { return a.id !== id; });
-                updateUser(user.email, { priceAlerts: userPriceAlerts });
+                savePriceAlerts();
                 renderPriceAlerts();
                 updateAlertBadge();
-                showToast('تم حذف التنبيه');
-            }
-
-            function checkPriceAlerts(currentPrices) {
-                var user = getCurrentUser();
-                if (!user || !userPriceAlerts.length) return;
-                var updated = false;
-                userPriceAlerts.forEach(function(alert) {
-                    if (alert.triggered) return;
-                    var price = currentPrices[alert.symbol];
-                    if (!price) return;
-                    if ((alert.direction === 'above' && price >= alert.targetPrice) || (alert.direction ===
-                            'below' && price <= alert.targetPrice)) {
-                        alert.triggered = true;
-                        updated = true;
-                        showToast('🔔 تنبيه: ' + alert.symbol + ' وصل إلى ' + alert.targetPrice + ' USDT!',
-                            false);
-                    }
-                });
-                if (updated) {
-                    updateUser(user.email, { priceAlerts: userPriceAlerts });
-                    renderPriceAlerts();
-                    updateAlertBadge();
-                }
             }
 
             function renderPriceAlerts() {
                 var container = document.getElementById('alerts-list-container');
-                if (!container) return;
-                var activeAlerts = userPriceAlerts.filter(function(a) { return !a.triggered; });
-                var triggeredAlerts = userPriceAlerts.filter(function(a) { return a.triggered; });
                 if (userPriceAlerts.length === 0) {
-                    container.innerHTML =
-                        '<p class="text-center py-2 text-sm" style="color: var(--text-secondary);">لا توجد تنبيهات نشطة</p>';
+                    container.innerHTML = '<p class="text-center py-2 text-sm" style="color: var(--text-secondary);">لا توجد تنبيهات نشطة</p>';
                     return;
                 }
-                var html = '';
-                if (activeAlerts.length > 0) {
-                    html +=
-                        '<p class="text-xs font-bold mb-2" style="color: var(--text-secondary);">🟢 تنبيهات نشطة</p>';
-                    html += activeAlerts.map(function(a) {
-                        return '<div class="price-alert-item"><div><span class="font-semibold">' + a.symbol +
-                            '/USDT</span> <span class="text-xs" style="color: var(--text-secondary);">' + (a
-                                .direction === 'above' ? 'فوق' : 'تحت') + ' ' + a.targetPrice +
-                            '</span></div><div class="flex items-center gap-2"><span class="text-xs" style="color: var(--text-secondary);">' +
-                            a.createdAt +
-                            '</span><button class="text-crypto-red text-sm hover:opacity-80" onclick="window._removeAlert(' +
-                            a.id + ')"><i class="fas fa-trash"></i></button></div></div>';
-                    }).join('');
-                }
-                if (triggeredAlerts.length > 0) {
-                    html +=
-                        '<p class="text-xs font-bold mb-2 mt-3" style="color: var(--text-secondary);">⚫ تم تفعيلها</p>';
-                    html += triggeredAlerts.map(function(a) {
-                        return '<div class="price-alert-item" style="opacity: 0.6;"><div><span class="font-semibold">' +
-                            a.symbol + '/USDT</span> <span class="text-xs">' + (a.direction === 'above' ?
-                                'فوق' : 'تحت') + ' ' + a.targetPrice +
-                            '</span></div><span class="text-xs text-crypto-green">✓ تم</span></div>';
-                    }).join('');
-                }
-                container.innerHTML = html;
+                container.innerHTML = userPriceAlerts.map(function(a) {
+                    return '<div class="price-alert-item"><div><span class="font-bold">' + a.symbol +
+                        '/USDT</span><span class="text-xs mx-2" style="color:var(--text-secondary);">' + (a.direction ===
+                            'above' ? 'فوق' : 'تحت') + '</span><span class="font-mono font-bold">' + a.price +
+                        '</span></div><button onclick="removeAlertById(' + a.id + ')" class="text-crypto-red text-xs p-1"><i class="fas fa-trash"></i></button></div>';
+                }).join('');
             }
+
+            window.removeAlertById = function(id) { removeAlert(id); };
 
             function updateAlertBadge() {
                 var badge = document.getElementById('alert-count-badge');
-                if (!badge) return;
-                var activeCount = userPriceAlerts.filter(function(a) { return !a.triggered; }).length;
-                if (activeCount > 0) {
-                    badge.classList.remove('hidden');
-                    badge.textContent = activeCount;
-                    badge.style.display = 'flex';
-                } else {
-                    badge.classList.add('hidden');
-                    badge.style.display = 'none';
-                }
+                var count = userPriceAlerts.filter(function(a) { return !a.triggered; }).length;
+                if (count > 0) { badge.textContent = count;
+                    badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); }
             }
 
-            window._removeAlert = removePriceAlert;
+            function checkPriceAlerts(prices) {
+                var triggered = false;
+                userPriceAlerts.forEach(function(alert) {
+                    if (alert.triggered) return;
+                    var price = prices[alert.symbol];
+                    if (!price) return;
+                    if (alert.direction === 'above' && price >= alert.price) {
+                        showToast('🔔 تنبيه: ' + alert.symbol + ' وصل إلى ' + price.toFixed(2));
+                        alert.triggered = true;
+                        triggered = true;
+                    } else if (alert.direction === 'below' && price <= alert.price) {
+                        showToast('🔔 تنبيه: ' + alert.symbol + ' انخفض إلى ' + price.toFixed(2));
+                        alert.triggered = true;
+                        triggered = true;
+                    }
+                });
+                if (triggered) { savePriceAlerts();
+                    updateAlertBadge(); }
+            }
 
-            // ==================== بيانات السوق والرسم البياني ====================
+            // ==================== بيانات الرسم البياني والأسواق ====================
+            // *** التعديل الرئيسي: توسيع قائمة العملات مع بيانات واقعية ***
             var symbols = [
-                { id: 'BTC', name: 'Bitcoin', icon: 'fab fa-bitcoin text-yellow-500', basePrice: 68245.50,
-                    volatility: 0.005 },
-                { id: 'ETH', name: 'Ethereum', icon: 'fab fa-ethereum text-purple-500', basePrice: 3421.80,
-                    volatility: 0.008 },
-                { id: 'BNB', name: 'Binance Coin', icon: 'fas fa-coins text-yellow-500', basePrice: 602.10,
-                    volatility: 0.006 },
-                { id: 'SOL', name: 'Solana', icon: 'fas fa-sun text-orange-400', basePrice: 172.35, volatility: 0.012 },
-                { id: 'XRP', name: 'Ripple', icon: 'fas fa-water text-blue-400', basePrice: 2.45, volatility: 0.01 },
-                { id: 'ADA', name: 'Cardano', icon: 'fas fa-circle text-blue-500', basePrice: 0.85, volatility: 0.015 }
+                { id: 'BTC',  name: 'Bitcoin',    icon: 'fab fa-bitcoin text-yellow-500',    basePrice: 68245.50, volatility: 0.005, volume24h: 31.2, marketCap: 1345.8, rank: 1,  supply: 19.7,  dominance: 52.4 },
+                { id: 'ETH',  name: 'Ethereum',   icon: 'fab fa-ethereum text-purple-500',   basePrice: 3421.80,  volatility: 0.008, volume24h: 18.7, marketCap: 411.2,  rank: 2,  supply: 120.2, dominance: 16.0 },
+                { id: 'BNB',  name: 'BNB',        icon: 'fas fa-coins text-yellow-500',      basePrice: 602.10,   volatility: 0.006, volume24h: 2.1,  marketCap: 87.6,   rank: 4,  supply: 145.5, dominance: 3.4 },
+                { id: 'SOL',  name: 'Solana',     icon: 'fas fa-sun text-orange-400',        basePrice: 172.35,   volatility: 0.012, volume24h: 4.8,  marketCap: 79.4,   rank: 5,  supply: 460.8, dominance: 3.1 },
+                { id: 'XRP',  name: 'Ripple',     icon: 'fas fa-water text-blue-400',        basePrice: 2.45,     volatility: 0.010, volume24h: 5.3,  marketCap: 135.7,  rank: 3,  supply: 55400, dominance: 5.3 },
+                { id: 'ADA',  name: 'Cardano',    icon: 'fas fa-circle text-blue-500',       basePrice: 0.85,     volatility: 0.015, volume24h: 0.9,  marketCap: 29.8,   rank: 9,  supply: 35100, dominance: 1.2 },
+                { id: 'APT',  name: 'Aptos',      icon: 'fas fa-layer-group text-teal-500',  basePrice: 9.50,     volatility: 0.014, volume24h: 0.5,  marketCap: 3.9,    rank: 32, supply: 410,   dominance: 0.15 },
+                { id: 'DOGE', name: 'Dogecoin',   icon: 'fas fa-dog text-yellow-600',        basePrice: 0.182,    volatility: 0.018, volume24h: 1.4,  marketCap: 26.2,   rank: 8,  supply: 144000,dominance: 1.0 },
+                { id: 'AVAX', name: 'Avalanche',  icon: 'fas fa-mountain text-red-500',      basePrice: 38.75,    volatility: 0.013, volume24h: 0.8,  marketCap: 15.9,   rank: 11, supply: 410,   dominance: 0.62 },
+                { id: 'DOT',  name: 'Polkadot',   icon: 'fas fa-circle-dot text-pink-500',   basePrice: 9.12,     volatility: 0.011, volume24h: 0.6,  marketCap: 12.3,   rank: 14, supply: 1350,  dominance: 0.48 },
+                { id: 'LINK', name: 'Chainlink',  icon: 'fas fa-link text-blue-600',         basePrice: 18.45,    volatility: 0.013, volume24h: 0.9,  marketCap: 11.1,   rank: 15, supply: 600,   dominance: 0.43 },
+                { id: 'ATOM', name: 'Cosmos',     icon: 'fas fa-atom text-indigo-500',       basePrice: 9.87,     volatility: 0.012, volume24h: 0.4,  marketCap: 3.8,    rank: 33, supply: 390,   dominance: 0.15 },
+                { id: 'LTC',  name: 'Litecoin',   icon: 'fas fa-coins text-gray-400',        basePrice: 87.30,    volatility: 0.009, volume24h: 0.7,  marketCap: 6.5,    rank: 22, supply: 74.5,  dominance: 0.25 },
+                { id: 'TRX',  name: 'TRON',       icon: 'fas fa-play text-red-400',          basePrice: 0.127,    volatility: 0.010, volume24h: 1.2,  marketCap: 11.0,   rank: 16, supply: 86700, dominance: 0.42 },
+                { id: 'UNI',  name: 'Uniswap',    icon: 'fas fa-exchange-alt text-pink-400', basePrice: 11.23,    volatility: 0.014, volume24h: 0.3,  marketCap: 6.7,    rank: 21, supply: 600,   dominance: 0.26 }
             ];
+
+            // إحصائيات ثابتة نسبيًا لكل عملة (تتغير ببطء لمحاكاة الواقع)
+            var marketStats = {};
+            symbols.forEach(function(s){
+                // 7-day sparkline (24 نقطة)
+                var spark = [], v = s.basePrice;
+                for (var i=0;i<24;i++){ v = v * (1 + (Math.random()-0.5)*s.volatility*2); spark.push(v); }
+                marketStats[s.id] = {
+                    price: s.basePrice,
+                    change24h: (Math.random()*10 - 4),       // %
+                    change7d:  (Math.random()*20 - 8),
+                    high24: s.basePrice * (1 + Math.random()*0.04 + 0.005),
+                    low24:  s.basePrice * (1 - Math.random()*0.04 - 0.005),
+                    vol24:  s.volume24h * (0.85 + Math.random()*0.3),
+                    spark: spark
+                };
+            });
 
             var currentSymbol = symbols[0];
             var marketChartData = [];
             var currentTf = '1D';
             var simulationInterval = null;
-            var chartScale = 1.0,
-                chartOffsetX = 0;
+            var chartScale = 1.0, chartOffsetX = 0;
             var canvas = document.getElementById('candlestick-chart');
             var ctx = canvas.getContext('2d');
             var tooltip = document.getElementById('chart-tooltip');
+            var crosshair = { active: false, x: 0, y: 0 };
 
             function generateInitialCandles(count, basePrice, volatility) {
                 var data = [];
                 var close = basePrice;
+                var t = Date.now() - count * 60000;
                 for (var i = 0; i < count; i++) {
                     var open = close;
                     var change = (Math.random() - 0.5) * volatility * basePrice;
                     close = Math.max(open + change, basePrice * 0.7);
                     var high = Math.max(open, close) + Math.random() * volatility * basePrice;
-                    var low = Math.min(open, close) - Math.random() * volatility * basePrice;
-                    data.push({ open: open, high: high, low: low, close: close });
+                    var low  = Math.min(open, close) - Math.random() * volatility * basePrice;
+                    var vol  = (0.5 + Math.random()) * basePrice * volatility * 100;
+                    data.push({ open: open, high: high, low: low, close: close, volume: vol, time: t + i*60000 });
                 }
                 return data;
             }
@@ -1606,17 +1705,37 @@
                 var newClose = Math.max(last.close + change, currentSymbol.basePrice * 0.5);
                 last.close = newClose;
                 last.high = Math.max(last.high, newClose + Math.random() * volatility * 0.3);
-                last.low = Math.min(last.low, newClose - Math.random() * volatility * 0.3);
+                last.low  = Math.min(last.low,  newClose - Math.random() * volatility * 0.3);
+                last.volume += Math.random() * volatility * 20;
                 if (Math.random() < 0.2) {
-                    var newCandle = {
+                    marketChartData.push({
                         open: last.close,
                         high: last.close + Math.random() * volatility * 0.5,
-                        low: last.close - Math.random() * volatility * 0.5,
-                        close: last.close + (Math.random() - 0.5) * volatility
-                    };
-                    marketChartData.push(newCandle);
+                        low:  last.close - Math.random() * volatility * 0.5,
+                        close: last.close + (Math.random() - 0.5) * volatility,
+                        volume: (0.5+Math.random()) * volatility * 100,
+                        time: (last.time||Date.now()) + 60000
+                    });
                     if (marketChartData.length > 60) marketChartData.shift();
                 }
+                // تحديث إحصائيات بقية العملات بانسيابية
+                symbols.forEach(function(s){
+                    if (s.id === currentSymbol.id) return;
+                    var st = marketStats[s.id];
+                    st.price = st.price * (1 + (Math.random()-0.5)*s.volatility*0.4);
+                    st.change24h += (Math.random()-0.5)*0.08;
+                    st.change24h = Math.max(-15, Math.min(15, st.change24h));
+                    st.spark.push(st.price); if (st.spark.length>24) st.spark.shift();
+                    st.high24 = Math.max(st.high24, st.price);
+                    st.low24  = Math.min(st.low24,  st.price);
+                    st.vol24 += Math.random()*0.005;
+                });
+                // العملة الحالية
+                var cs = marketStats[currentSymbol.id];
+                cs.price = newClose;
+                cs.spark.push(newClose); if (cs.spark.length>24) cs.spark.shift();
+                cs.high24 = Math.max(cs.high24, newClose);
+                cs.low24  = Math.min(cs.low24,  newClose);
                 drawChart();
                 updatePriceDisplay();
                 updateTopMarkets();
@@ -1625,80 +1744,202 @@
 
             function checkPriceAlertsFromMarket() {
                 var prices = {};
-                symbols.forEach(function(s) {
-                    if (s.id === currentSymbol.id && marketChartData.length) {
-                        prices[s.id] = marketChartData[marketChartData.length - 1].close;
-                    } else {
-                        prices[s.id] = s.basePrice * (1 + (Math.random() - 0.5) * 0.02);
-                    }
-                });
+                symbols.forEach(function(s) { prices[s.id] = marketStats[s.id].price; });
                 checkPriceAlerts(prices);
             }
 
+            // ========= رسم بياني عصري =========
             function drawChart() {
                 if (!marketChartData.length) return;
+                var isDark = document.documentElement.classList.contains('dark');
                 var w = canvas.clientWidth || 400;
-                var h = 240;
-                canvas.width = w;
-                canvas.height = h;
-                var padding = { top: 20, bottom: 25, left: 55, right: 15 };
-                var graphWidth = w - padding.left - padding.right;
-                var graphHeight = h - padding.top - padding.bottom;
-                var visibleCandlesCount = Math.floor(marketChartData.length / chartScale);
-                var startIndex = Math.max(0, Math.min(marketChartData.length - visibleCandlesCount, Math.floor(chartOffsetX /
-                    100 * marketChartData.length)));
-                var endIndex = Math.min(marketChartData.length, startIndex + visibleCandlesCount);
+                var h = 260;
+                var dpr = window.devicePixelRatio || 1;
+                canvas.width  = w * dpr;
+                canvas.height = h * dpr;
+                canvas.style.height = h + 'px';
+                ctx.setTransform(dpr,0,0,dpr,0,0);
+
+                var padding = { top: 14, bottom: 22, left: 8, right: 58 };
+                var volH = 42;   // ارتفاع منطقة الحجم
+                var graphWidth  = w - padding.left - padding.right;
+                var graphHeight = h - padding.top - padding.bottom - volH - 6;
+
+                var visibleCount = Math.floor(marketChartData.length / chartScale);
+                var startIndex = Math.max(0, Math.min(marketChartData.length - visibleCount, Math.floor(chartOffsetX / 100 * marketChartData.length)));
+                var endIndex = Math.min(marketChartData.length, startIndex + visibleCount);
                 var visibleData = marketChartData.slice(startIndex, endIndex);
-                if (visibleData.length === 0) return;
-                var prices = visibleData.flatMap(function(d) { return [d.high, d.low]; });
-                var maxPrice = Math.max.apply(null, prices) * 1.02;
-                var minPrice = Math.min.apply(null, prices) * 0.98;
-                var priceRange = maxPrice - minPrice;
-                ctx.clearRect(0, 0, w, h);
-                ctx.strokeStyle = '#e2e8f0';
-                ctx.lineWidth = 0.5;
-                ctx.fillStyle = '#64748b';
-                ctx.font = '10px Cairo';
-                ctx.textAlign = 'right';
-                var gridLines = 5;
-                for (var i = 0; i <= gridLines; i++) {
-                    var price = maxPrice - (i / gridLines) * priceRange;
-                    var y = padding.top + (i / gridLines) * graphHeight;
-                    ctx.beginPath();
-                    ctx.moveTo(padding.left, y);
-                    ctx.lineTo(w - padding.right, y);
-                    ctx.stroke();
-                    ctx.fillText(price.toFixed(2), padding.left - 5, y + 3);
-                }
-                var candleWidth = Math.max(3, (graphWidth / visibleData.length) * 0.7);
-                var spacing = (graphWidth - candleWidth * visibleData.length) / (visibleData.length + 1);
-                visibleData.forEach(function(d, i) {
-                    var x = padding.left + spacing + i * (candleWidth + spacing);
-                    var yHigh = padding.top + ((maxPrice - d.high) / priceRange) * graphHeight;
-                    var yLow = padding.top + ((maxPrice - d.low) / priceRange) * graphHeight;
-                    var yOpen = padding.top + ((maxPrice - d.open) / priceRange) * graphHeight;
-                    var yClose = padding.top + ((maxPrice - d.close) / priceRange) * graphHeight;
-                    var color = d.close >= d.open ? '#02c076' : '#f84960';
-                    ctx.fillStyle = color;
-                    ctx.fillRect(x, Math.min(yOpen, yClose), candleWidth, Math.max(1, Math.abs(yClose - yOpen)));
-                    ctx.beginPath();
-                    ctx.strokeStyle = color;
-                    ctx.lineWidth = 1;
-                    ctx.moveTo(x + candleWidth / 2, yHigh);
-                    ctx.lineTo(x + candleWidth / 2, yLow);
-                    ctx.stroke();
+                if (!visibleData.length) return;
+
+                var maxPrice = -Infinity, minPrice = Infinity, maxVol = 0;
+                visibleData.forEach(function(d){
+                    if (d.high>maxPrice) maxPrice=d.high;
+                    if (d.low<minPrice)  minPrice=d.low;
+                    if (d.volume>maxVol) maxVol=d.volume;
                 });
-                ctx.strokeStyle = '#cbd5e1';
+                var pad = (maxPrice-minPrice)*0.08 || maxPrice*0.01;
+                maxPrice += pad; minPrice -= pad;
+                var priceRange = maxPrice - minPrice || 1;
+
+                ctx.clearRect(0,0,w,h);
+
+                // خلفية متدرجة
+                var bg = ctx.createLinearGradient(0,0,0,h);
+                if (isDark) {
+                    bg.addColorStop(0, 'rgba(55,114,255,0.05)');
+                    bg.addColorStop(1, 'rgba(0,0,0,0)');
+                } else {
+                    bg.addColorStop(0, 'rgba(55,114,255,0.04)');
+                    bg.addColorStop(1, 'rgba(255,255,255,0)');
+                }
+                ctx.fillStyle = bg;
+                ctx.fillRect(0,0,w,h);
+
+                // شبكة أفقية متقطعة
+                ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(15,23,42,0.06)';
                 ctx.lineWidth = 1;
-                ctx.strokeRect(padding.left, padding.top, graphWidth, graphHeight);
+                ctx.setLineDash([3,4]);
+                ctx.fillStyle = isDark ? '#94a3b8' : '#64748b';
+                ctx.font = '10px Cairo, sans-serif';
+                ctx.textAlign = 'left';
+                var gridLines = 5;
+                for (var i=0;i<=gridLines;i++){
+                    var price = maxPrice - (i/gridLines)*priceRange;
+                    var y = padding.top + (i/gridLines)*graphHeight;
+                    ctx.beginPath(); ctx.moveTo(padding.left, y); ctx.lineTo(padding.left+graphWidth, y); ctx.stroke();
+                    ctx.fillText(formatPrice(price), padding.left+graphWidth+5, y+3);
+                }
+                ctx.setLineDash([]);
+
+                var candleWidth = Math.max(2.5, (graphWidth / visibleData.length) * 0.62);
+                var slot = graphWidth / visibleData.length;
+
+                // منطقة الحجم
+                var volTop = padding.top + graphHeight + 6;
+                visibleData.forEach(function(d, i){
+                    var x = padding.left + i*slot + (slot-candleWidth)/2;
+                    var vh = maxVol>0 ? (d.volume/maxVol)*volH : 0;
+                    var up = d.close >= d.open;
+                    ctx.fillStyle = up ? 'rgba(2,192,118,0.35)' : 'rgba(248,73,96,0.35)';
+                    ctx.fillRect(x, volTop+volH-vh, candleWidth, vh);
+                });
+
+                // خط متوسط متحرك MA(7) على منطقة السعر
+                if (visibleData.length>=7){
+                    ctx.beginPath();
+                    ctx.strokeStyle = '#f59e0b';
+                    ctx.lineWidth = 1.4;
+                    for (var i=6;i<visibleData.length;i++){
+                        var sum=0; for (var j=i-6;j<=i;j++) sum+=visibleData[j].close;
+                        var ma = sum/7;
+                        var x = padding.left + i*slot + slot/2;
+                        var y = padding.top + ((maxPrice-ma)/priceRange)*graphHeight;
+                        if (i===6) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+                    }
+                    ctx.stroke();
+                }
+
+                // شموع عصرية برؤوس مدورة وتوهج
+                visibleData.forEach(function(d, i){
+                    var x = padding.left + i*slot + (slot-candleWidth)/2;
+                    var yHigh  = padding.top + ((maxPrice-d.high)/priceRange)*graphHeight;
+                    var yLow   = padding.top + ((maxPrice-d.low)/priceRange)*graphHeight;
+                    var yOpen  = padding.top + ((maxPrice-d.open)/priceRange)*graphHeight;
+                    var yClose = padding.top + ((maxPrice-d.close)/priceRange)*graphHeight;
+                    var up = d.close >= d.open;
+                    var color = up ? '#02c076' : '#f84960';
+                    var glow  = up ? 'rgba(2,192,118,0.35)' : 'rgba(248,73,96,0.35)';
+
+                    // wick
+                    ctx.strokeStyle = color;
+                    ctx.lineWidth = 1.2;
+                    ctx.lineCap = 'round';
+                    ctx.beginPath();
+                    ctx.moveTo(x+candleWidth/2, yHigh);
+                    ctx.lineTo(x+candleWidth/2, yLow);
+                    ctx.stroke();
+
+                    // body مع توهج لآخر شمعة
+                    if (i === visibleData.length-1){
+                        ctx.shadowColor = glow;
+                        ctx.shadowBlur = 10;
+                    }
+                    var bodyY = Math.min(yOpen,yClose);
+                    var bodyH = Math.max(1.5, Math.abs(yClose-yOpen));
+                    var grad = ctx.createLinearGradient(0, bodyY, 0, bodyY+bodyH);
+                    if (up){ grad.addColorStop(0,'#06d68a'); grad.addColorStop(1,'#02a868'); }
+                    else  { grad.addColorStop(0,'#ff6478'); grad.addColorStop(1,'#d63a52'); }
+                    ctx.fillStyle = grad;
+                    roundRect(ctx, x, bodyY, candleWidth, bodyH, Math.min(2, candleWidth/3));
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                });
+
+                // خط آخر سعر + بطاقة على اليمين
+                var last = visibleData[visibleData.length-1];
+                var yLast = padding.top + ((maxPrice-last.close)/priceRange)*graphHeight;
+                ctx.strokeStyle = last.close>=last.open ? '#02c076' : '#f84960';
+                ctx.setLineDash([4,4]); ctx.lineWidth = 1;
+                ctx.beginPath(); ctx.moveTo(padding.left, yLast); ctx.lineTo(padding.left+graphWidth, yLast); ctx.stroke();
+                ctx.setLineDash([]);
+                var lbl = formatPrice(last.close);
+                ctx.font = 'bold 10px Cairo, sans-serif';
+                var tw = ctx.measureText(lbl).width + 10;
+                ctx.fillStyle = last.close>=last.open ? '#02c076' : '#f84960';
+                roundRect(ctx, padding.left+graphWidth+3, yLast-8, tw, 16, 4); ctx.fill();
+                ctx.fillStyle = '#fff'; ctx.textAlign='left';
+                ctx.fillText(lbl, padding.left+graphWidth+8, yLast+3);
+
+                // علامات الزمن
+                ctx.fillStyle = isDark ? '#64748b' : '#94a3b8';
+                ctx.font = '9px Cairo, sans-serif';
+                ctx.textAlign='center';
+                var labels = Math.min(5, visibleData.length);
+                for (var k=0;k<labels;k++){
+                    var idx = Math.floor(k*(visibleData.length-1)/(labels-1||1));
+                    var d2 = new Date(visibleData[idx].time || Date.now());
+                    var hh = String(d2.getHours()).padStart(2,'0');
+                    var mm = String(d2.getMinutes()).padStart(2,'0');
+                    ctx.fillText(hh+':'+mm, padding.left + idx*slot + slot/2, h-6);
+                }
+
+                // crosshair
+                if (crosshair.active){
+                    ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.25)' : 'rgba(15,23,42,0.25)';
+                    ctx.setLineDash([3,3]); ctx.lineWidth = 1;
+                    ctx.beginPath(); ctx.moveTo(crosshair.x, padding.top); ctx.lineTo(crosshair.x, padding.top+graphHeight); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(padding.left, crosshair.y); ctx.lineTo(padding.left+graphWidth, crosshair.y); ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+
                 document.getElementById('zoom-level').textContent = Math.round(chartScale * 100) + '%';
+                // تحديث ملصقات الزمن أسفل
+                var firstT = visibleData[0].time, lastT = visibleData[visibleData.length-1].time;
+                if (firstT && lastT){
+                    var f = new Date(firstT), l = new Date(lastT);
+                    document.getElementById('chart-start-label').textContent =
+                        String(f.getHours()).padStart(2,'0')+':'+String(f.getMinutes()).padStart(2,'0');
+                    document.getElementById('chart-end-label').textContent =
+                        String(l.getHours()).padStart(2,'0')+':'+String(l.getMinutes()).padStart(2,'0');
+                }
+            }
+
+            function roundRect(ctx,x,y,w,h,r){
+                r = Math.min(r, w/2, h/2);
+                ctx.beginPath();
+                ctx.moveTo(x+r,y);
+                ctx.arcTo(x+w,y,x+w,y+h,r);
+                ctx.arcTo(x+w,y+h,x,y+h,r);
+                ctx.arcTo(x,y+h,x,y,r);
+                ctx.arcTo(x,y,x+w,y,r);
+                ctx.closePath();
             }
 
             function updatePriceDisplay() {
                 var last = marketChartData[marketChartData.length - 1];
                 var prev = marketChartData[marketChartData.length - 2] || last;
                 var change = ((last.close - prev.close) / prev.close * 100);
-                document.getElementById('current-price').textContent = last.close.toFixed(2);
+                document.getElementById('current-price').textContent = formatPrice(last.close);
                 var changeSpan = document.getElementById('price-change');
                 changeSpan.textContent = (change > 0 ? '+' : '') + change.toFixed(2) + '%';
                 changeSpan.className = 'text-sm font-medium px-2 py-1 rounded-lg ' + (change >= 0 ?
@@ -1707,19 +1948,15 @@
 
             function switchSymbol(symbol) {
                 currentSymbol = symbol;
-                document.getElementById('market-title').innerHTML = '<i class="' + symbol.icon + '"></i> ' + symbol.id +
-                    '/USDT';
-                var count = currentTf === '1D' ? 24 : (currentTf === '1W' ? 7 * 24 : (currentTf === '1M' ? 30 : (currentTf ===
-                    '3M' ? 90 : 365)));
+                document.getElementById('market-title').innerHTML = '<i class="' + symbol.icon + '"></i> ' + symbol.id + '/USDT';
+                var count = currentTf === '1D' ? 24 : (currentTf === '1W' ? 7 * 24 : (currentTf === '1M' ? 30 : (currentTf === '3M' ? 90 : 365)));
                 marketChartData = generateInitialCandles(Math.min(count, 60), symbol.basePrice, symbol.volatility);
-                chartScale = 1.0;
-                chartOffsetX = 0;
+                chartScale = 1.0; chartOffsetX = 0;
                 drawChart();
                 updatePriceDisplay();
                 document.querySelectorAll('.symbol-chip').forEach(function(chip) {
                     chip.classList.remove('active');
-                    chip.style.background = '';
-                    chip.style.color = '';
+                    chip.style.background = ''; chip.style.color = '';
                     if (chip.dataset.symbol === symbol.id) {
                         chip.classList.add('active');
                         chip.style.background = '#3772ff';
@@ -1732,9 +1969,8 @@
                 var container = document.getElementById('symbols-container');
                 container.innerHTML = symbols.map(function(s) {
                     return '<div class="symbol-chip ' + (s.id === currentSymbol.id ? 'active' : '') +
-                        '" data-symbol="' + s.id + '" style="' + (s.id === currentSymbol.id ?
-                            'background:#3772ff;color:white;' : '') + '"><i class="' + s.icon + '"></i> ' + s
-                        .id + '/USDT</div>';
+                        '" data-symbol="' + s.id + '" style="' + (s.id === currentSymbol.id ? 'background:#3772ff;color:white;' : '') +
+                        '"><i class="' + s.icon + '"></i> ' + s.id + '/USDT</div>';
                 }).join('');
                 document.querySelectorAll('.symbol-chip').forEach(function(chip) {
                     chip.addEventListener('click', function() {
@@ -1744,21 +1980,106 @@
                 });
             }
 
+            // ==================== دالة عرض الأسواق المحسّنة ====================
+            function formatVolume(vol) {
+                if (vol >= 1000) return (vol/1000).toFixed(2) + 'T';
+                if (vol >= 1) return vol.toFixed(2) + 'B';
+                return (vol * 1000).toFixed(1) + 'M';
+            }
+            function formatMarketCap(cap) {
+                if (cap >= 1000) return (cap / 1000).toFixed(2) + 'T';
+                if (cap >= 1) return cap.toFixed(2) + 'B';
+                return (cap * 1000).toFixed(0) + 'M';
+            }
+            function formatPrice(price) {
+                if (price >= 10000) return price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                if (price >= 1) return price.toFixed(2);
+                if (price >= 0.01) return price.toFixed(4);
+                return price.toFixed(6);
+            }
+            function formatSupply(s){
+                if (s >= 1000) return (s/1000).toFixed(1)+'K';
+                return s.toFixed(1);
+            }
+
+            // sparkline SVG صغير
+            function sparklineSVG(arr, up){
+                if (!arr || arr.length<2) return '';
+                var min = Math.min.apply(null,arr), max = Math.max.apply(null,arr);
+                var range = (max-min) || 1;
+                var w=56, h=22;
+                var pts = arr.map(function(v,i){
+                    var x = (i/(arr.length-1))*w;
+                    var y = h - ((v-min)/range)*(h-2) - 1;
+                    return x.toFixed(1)+','+y.toFixed(1);
+                }).join(' ');
+                var color = up ? '#02c076' : '#f84960';
+                var fillId = 'sp'+Math.random().toString(36).slice(2,8);
+                return '<svg class="sparkline-wrap" viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none">'
+                    + '<defs><linearGradient id="'+fillId+'" x1="0" x2="0" y1="0" y2="1">'
+                    + '<stop offset="0%" stop-color="'+color+'" stop-opacity="0.35"/>'
+                    + '<stop offset="100%" stop-color="'+color+'" stop-opacity="0"/></linearGradient></defs>'
+                    + '<polyline points="0,'+h+' '+pts+' '+w+','+h+'" fill="url(#'+fillId+')" stroke="none"/>'
+                    + '<polyline points="'+pts+'" fill="none" stroke="'+color+'" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>'
+                    + '</svg>';
+            }
+
             function updateTopMarkets() {
                 var container = document.getElementById('top-markets-list');
-                var top = symbols.slice(0, 6);
-                container.innerHTML = top.map(function(s) {
-                    var price = s.id === currentSymbol.id ? marketChartData[marketChartData.length - 1].close :
-                        s.basePrice * (1 + (Math.random() - 0.5) * 0.02);
-                    var change = (Math.random() * 6 - 2).toFixed(2);
-                    var changeClass = change >= 0 ? 'text-crypto-green' : 'text-crypto-red';
-                    return '<div class="asset-row grid grid-cols-3 py-3 px-3 items-center"><div class="flex items-center gap-2"><i class="' +
-                        s.icon + ' text-lg"></i><div class="font-semibold">' + s.id +
-                        '/USDT</div></div><div class="text-center font-semibold">$' + price.toFixed(2) +
-                        '</div><div class="text-right ' + changeClass + '">' + (change > 0 ? '+' : '') + change +
-                        '%</div></div>';
+                container.innerHTML = symbols.map(function(s) {
+                    var st = marketStats[s.id];
+                    var price = (s.id === currentSymbol.id && marketChartData.length)
+                        ? marketChartData[marketChartData.length - 1].close : st.price;
+                    var isUp = st.change24h >= 0;
+                    var changeStr = (st.change24h>0?'+':'') + st.change24h.toFixed(2) + '%';
+                    var arrow = isUp ? '<i class="fas fa-caret-up"></i>' : '<i class="fas fa-caret-down"></i>';
+                    var spark = sparklineSVG(st.spark, isUp);
+                    var volDisplay = formatVolume(st.vol24);
+                    var capDisplay = formatMarketCap(s.marketCap);
+
+                    return '<div class="asset-row grid grid-cols-3 py-2.5 px-3 items-center" style="cursor:pointer;" onclick="(function(){var sym=window._forxSymbols&&window._forxSymbols.find(function(x){return x.id===\'' + s.id + '\'});if(sym)switchSymbol(sym);})()">'
+                        + '<div class="flex items-center gap-2">'
+                        +   '<div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style="background:var(--input-bg);"><i class="' + s.icon + ' text-base"></i></div>'
+                        +   '<div style="min-width:0;">'
+                        +     '<div class="font-bold flex items-center" style="font-size:0.78rem;"><span class="market-rank">#'+s.rank+'</span>' + s.id + '<span style="color:var(--text-secondary);font-weight:500;">/USDT</span></div>'
+                        +     '<div class="market-row-sub">' + s.name + '</div>'
+                        +     '<div class="market-cap-badge">MC $' + capDisplay + ' · ' + s.dominance.toFixed(2) + '%</div>'
+                        +   '</div>'
+                        + '</div>'
+                        + '<div class="text-center">'
+                        +   '<div class="market-row-price">$' + formatPrice(price) + '</div>'
+                        +   '<div class="market-row-sub" style="font-size:0.6rem;">'
+                        +     'H <span style="color:#02c076;">' + formatPrice(st.high24) + '</span>'
+                        +     ' · L <span style="color:#f84960;">' + formatPrice(st.low24) + '</span>'
+                        +   '</div>'
+                        +   '<div style="margin-top:3px;">' + spark + '</div>'
+                        + '</div>'
+                        + '<div class="text-right">'
+                        +   '<div class="market-row-change ' + (isUp ? 'up' : 'down') + '">' + arrow + ' ' + changeStr + '</div>'
+                        +   '<div class="market-row-vol">Vol $' + volDisplay + '</div>'
+                        +   '<div class="market-row-extra"><span>Sup ' + formatSupply(s.supply) + ' ' + s.id + '</span></div>'
+                        + '</div>'
+                        + '</div>';
                 }).join('');
             }
+
+            // تخزين symbols للوصول من الـ onclick
+            window._forxSymbols = symbols;
+
+            function changeTimeframe(tf) {
+                currentTf = tf;
+                var count = tf === '1D' ? 24 : (tf === '1W' ? 7 * 24 : (tf === '1M' ? 30 : (tf === '3M' ? 90 : 365)));
+                marketChartData = generateInitialCandles(Math.min(count, 60), currentSymbol.basePrice, currentSymbol.volatility);
+                chartScale = 1.0; chartOffsetX = 0;
+                drawChart(); updatePriceDisplay();
+                document.querySelectorAll('.timeframe-btn').forEach(function(btn) {
+                    btn.classList.remove('active');
+                    if (btn.dataset.tf === tf) btn.classList.add('active');
+                });
+            }
+
+            // تخزين symbols للوصول من الـ onclick
+            window._forxSymbols = symbols;
 
             function changeTimeframe(tf) {
                 currentTf = tf;
@@ -1867,6 +2188,7 @@
                 var btcBalance = user.btcBalance || 0;
                 var ethBalance = user.ethBalance || 0;
                 var solBalance = user.solBalance || 0;
+                var aptBalance = user.aptBalance || 0;
                 var totalDeposited = (user.transactions || []).filter(function(t) { return t.type === 'deposit'; }).reduce(
                     function(s, t) { return s + t.amount; }, 0);
                 var totalWithdrawn = (user.transactions || []).filter(function(t) { return t.type === 'withdraw'; }).reduce(
@@ -1884,7 +2206,8 @@
                 document.getElementById('summary-deposits').textContent = totalDeposited.toFixed(2) + ' USDT';
                 document.getElementById('summary-withdrawals').textContent = totalWithdrawn.toFixed(2) + ' USDT';
                 document.getElementById('summary-trades').textContent = (user.trades || []).length;
-                var totalUsdValue = balance + (btcBalance * 68245.50) + (ethBalance * 3421.80) + (solBalance * 172.35);
+                var totalUsdValue = balance + (btcBalance * 68245.50) + (ethBalance * 3421.80) + (solBalance * 172.35) + (
+                    aptBalance * 9.50);
                 document.getElementById('wallet-page-total-balance').textContent = totalUsdValue.toFixed(2) + ' USDT';
                 var assetsContainer = document.getElementById('wallet-page-assets');
                 assetsContainer.innerHTML = [
@@ -1895,7 +2218,9 @@
                     { name: 'ETH', icon: 'fa-ethereum', color: 'purple-600', bg: 'purple-100', balance: ethBalance,
                         price: 3421.80, decimals: 6 },
                     { name: 'SOL', icon: 'fa-sun', color: 'orange-500', bg: 'orange-100', balance: solBalance, price: 172.35,
-                        decimals: 6 }
+                        decimals: 6 },
+                    { name: 'APT', icon: 'fa-layer-group', color: 'teal-500', bg: 'teal-100', balance: aptBalance,
+                        price: 9.50, decimals: 4 }
                 ].map(function(a) {
                     return '<div class="flex items-center justify-between py-3"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-' +
                         a.bg + ' flex items-center justify-center"><i class="fas ' + a.icon + ' text-' + a
@@ -1957,10 +2282,13 @@
                 var btcBalance = user.btcBalance || 0;
                 var ethBalance = user.ethBalance || 0;
                 var solBalance = user.solBalance || 0;
+                var aptBalance = user.aptBalance || 0;
                 var btcPrice = 68245.50,
                     ethPrice = 3421.80,
-                    solPrice = 172.35;
-                var total = usdtBalance + btcBalance * btcPrice + ethBalance * ethPrice + solBalance * solPrice;
+                    solPrice = 172.35,
+                    aptPrice = 9.50;
+                var total = usdtBalance + btcBalance * btcPrice + ethBalance * ethPrice + solBalance * solPrice + aptBalance *
+                    aptPrice;
                 document.getElementById('wallet-total-balance').textContent = total.toFixed(2) + ' USDT';
                 var assetsHtml = [
                     { name: 'USDT', icon: 'fa-dollar-sign', color: 'green-600', balance: usdtBalance, price: 1,
@@ -1970,7 +2298,9 @@
                     { name: 'ETH', icon: 'fa-ethereum', color: 'purple-600', balance: ethBalance, price: ethPrice,
                         decimals: 6 },
                     { name: 'SOL', icon: 'fa-sun', color: 'orange-500', balance: solBalance, price: solPrice,
-                        decimals: 6 }
+                        decimals: 6 },
+                    { name: 'APT', icon: 'fa-layer-group', color: 'teal-500', balance: aptBalance, price: aptPrice,
+                        decimals: 4 }
                 ].map(function(a) {
                     return '<div class="flex items-center justify-between p-3 rounded-lg" style="background: var(--input-bg);"><div class="flex items-center gap-2"><i class="fas ' +
                         a.icon + ' text-' + a.color + '"></i><span class="font-semibold">' + a.name +
@@ -2001,8 +2331,9 @@
                 else if (currentTransferAsset === 'BTC') available = user.btcBalance || 0;
                 else if (currentTransferAsset === 'ETH') available = user.ethBalance || 0;
                 else if (currentTransferAsset === 'SOL') available = user.solBalance || 0;
+                else if (currentTransferAsset === 'APT') available = user.aptBalance || 0;
                 document.getElementById('transfer-available').textContent = available.toFixed(currentTransferAsset ===
-                    'USDT' ? 2 : 6);
+                    'USDT' ? 2 : (currentTransferAsset === 'APT' ? 4 : 6));
                 document.getElementById('transfer-available-symbol').textContent = currentTransferAsset;
                 document.getElementById('transfer-asset-symbol').textContent = currentTransferAsset;
                 calculateReceiveAmount();
@@ -2015,11 +2346,12 @@
                 else if (currentTransferAsset === 'BTC') fee = 0.0001;
                 else if (currentTransferAsset === 'ETH') fee = 0.002;
                 else if (currentTransferAsset === 'SOL') fee = 0.005;
+                else if (currentTransferAsset === 'APT') fee = 0.01;
                 document.getElementById('transfer-fee-amount').textContent = fee.toFixed(currentTransferAsset === 'USDT' ?
-                    2 : 6) + ' ' + currentTransferAsset;
+                    2 : (currentTransferAsset === 'APT' ? 4 : 6)) + ' ' + currentTransferAsset;
                 var receive = Math.max(0, amount - fee);
                 document.getElementById('transfer-receive-amount').textContent = receive.toFixed(currentTransferAsset ===
-                    'USDT' ? 2 : 6) + ' ' + currentTransferAsset;
+                    'USDT' ? 2 : (currentTransferAsset === 'APT' ? 4 : 6)) + ' ' + currentTransferAsset;
             }
 
             function processTransfer(asset, network, recipient, amount) {
@@ -2038,6 +2370,8 @@
                     balanceField = 'ethBalance';
                     minAmount = 0.01; } else if (asset === 'SOL') { fee = 0.005;
                     balanceField = 'solBalance';
+                    minAmount = 0.1; } else if (asset === 'APT') { fee = 0.01;
+                    balanceField = 'aptBalance';
                     minAmount = 0.1; } else return { success: false, message: 'عملة غير مدعومة' };
                 if (amount < minAmount) return { success: false, message: 'الحد الأدنى للتحويل ' + minAmount + ' ' + asset };
                 var currentBalance = user[balanceField] || 0;
@@ -2114,7 +2448,6 @@
 
             // ==================== بيانات الإحالة (القيم صفر دائمًا) ====================
             function updateInviteModalData() {
-                // تعيين كل القيم إلى صفر بشكل دائم
                 document.getElementById('invite-referrals-count').textContent = '0';
                 document.getElementById('invite-active-count').textContent = '0 نشط';
                 document.getElementById('invite-earnings').textContent = '0.00 USDT';
@@ -2234,6 +2567,12 @@
                         msg.classList.remove('hidden'); }
                 });
 
+                // نسيت كلمة المرور
+                document.getElementById('forgot-password-btn').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showToast('🔑 يرجى التواصل مع الدعم الفني لاستعادة كلمة المرور');
+                });
+
                 var tabLogin = document.getElementById('tab-login'),
                     tabSignup = document.getElementById('tab-signup');
                 var loginForm = document.getElementById('login-form'),
@@ -2300,7 +2639,7 @@
                     if (findUserByEmail(email)) { signupError.textContent = 'البريد مسجل مسبقاً';
                         signupError.classList.remove('hidden'); return; }
                     var newUser = { fullName: name, email: email.toLowerCase(), password: btoa(pass),
-                        balance: 0, btcBalance: 0, ethBalance: 0, solBalance: 0,
+                        balance: 0, btcBalance: 0, ethBalance: 0, solBalance: 0, aptBalance: 0,
                         transactions: [], priceAlerts: [], trades: [], joinDate: new Date().toISOString()
                             .split('T')[0],
                         referralCode: generateReferralCode(email.toLowerCase()),
@@ -2456,21 +2795,25 @@
                 var transferNetworkTRC20 = document.getElementById('transfer-network-trc20');
                 var transferNetworkBEP20 = document.getElementById('transfer-network-bep20');
                 var transferNetworkERC20 = document.getElementById('transfer-network-erc20');
+                var transferNetworkAPT = document.getElementById('transfer-network-apt');
                 var currentTransferNetwork = 'TRC20';
 
                 function setTransferActiveNetwork(network) {
                     currentTransferNetwork = network;
-                    [transferNetworkTRC20, transferNetworkBEP20, transferNetworkERC20].forEach(function(btn) {
-                        btn.classList.remove('active-network');
-                    });
+                    [transferNetworkTRC20, transferNetworkBEP20, transferNetworkERC20, transferNetworkAPT].forEach(
+                        function(btn) {
+                            btn.classList.remove('active-network');
+                        });
                     if (network === 'TRC20') transferNetworkTRC20.classList.add('active-network');
                     else if (network === 'BEP20') transferNetworkBEP20.classList.add('active-network');
-                    else transferNetworkERC20.classList.add('active-network');
+                    else if (network === 'ERC20') transferNetworkERC20.classList.add('active-network');
+                    else if (network === 'APT') transferNetworkAPT.classList.add('active-network');
                     calculateReceiveAmount();
                 }
                 transferNetworkTRC20.addEventListener('click', function() { setTransferActiveNetwork('TRC20'); });
                 transferNetworkBEP20.addEventListener('click', function() { setTransferActiveNetwork('BEP20'); });
                 transferNetworkERC20.addEventListener('click', function() { setTransferActiveNetwork('ERC20'); });
+                transferNetworkAPT.addEventListener('click', function() { setTransferActiveNetwork('APT'); });
                 transferAmount.addEventListener('input', calculateReceiveAmount);
                 document.getElementById('transfer-max-btn').addEventListener('click', function() {
                     var user = getCurrentUser();
@@ -2480,7 +2823,9 @@
                     else if (currentTransferAsset === 'BTC') max = user.btcBalance || 0;
                     else if (currentTransferAsset === 'ETH') max = user.ethBalance || 0;
                     else if (currentTransferAsset === 'SOL') max = user.solBalance || 0;
-                    transferAmount.value = max.toFixed(currentTransferAsset === 'USDT' ? 2 : 6);
+                    else if (currentTransferAsset === 'APT') max = user.aptBalance || 0;
+                    transferAmount.value = max.toFixed(currentTransferAsset === 'USDT' ? 2 : (currentTransferAsset ===
+                        'APT' ? 4 : 6));
                     calculateReceiveAmount();
                 });
                 document.getElementById('transfer-submit-btn').addEventListener('click', function() {
